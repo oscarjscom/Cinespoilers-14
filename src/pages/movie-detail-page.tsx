@@ -1,7 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { PLACEHOLDER_MOVIES } from '@/data/movies'
 
 export function MovieDetailPage() {
@@ -11,8 +9,9 @@ export function MovieDetailPage() {
   if (!movie) {
     return (
       <div className="flex flex-col items-center justify-center py-32 gap-4">
-        <p className="text-muted-foreground text-lg">Movie not found.</p>
-        <Button asChild variant="outline">
+        <p className="text-5xl">🎬</p>
+        <p className="text-foreground font-semibold text-xl">Movie not found</p>
+        <Button asChild variant="outline" className="rounded-full border-white/20 hover:bg-white/5">
           <Link to="/">Go Home</Link>
         </Button>
       </div>
@@ -21,49 +20,70 @@ export function MovieDetailPage() {
 
   return (
     <div>
-      {/* Backdrop */}
-      <div className="relative h-72 md:h-96 w-full overflow-hidden rounded-xl mb-8">
+      {/* Full-bleed backdrop */}
+      <div className="relative h-80 md:h-[480px] w-full overflow-hidden mb-0">
         <img
           src={movie.backdrop}
           alt={movie.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
+
+        {/* Back button overlay */}
+        <div className="absolute top-4 left-4">
+          <Link
+            to="/movies"
+            className="flex items-center gap-2 text-sm text-white/80 hover:text-white bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 transition-all hover:bg-black/60"
+          >
+            ← Back to Movies
+          </Link>
+        </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 px-2">
+      <div className="flex flex-col md:flex-row gap-8 px-4 -mt-24 relative z-10">
         {/* Poster */}
-        <img
-          src={movie.image}
-          alt={movie.title}
-          className="w-40 h-60 object-cover rounded-xl shadow-lg shrink-0 -mt-24 relative z-10 hidden md:block"
-        />
+        <div className="shrink-0 hidden md:block">
+          <img
+            src={movie.image}
+            alt={movie.title}
+            className="w-44 h-64 object-cover rounded-2xl shadow-2xl border-2 border-white/10"
+          />
+        </div>
 
         {/* Info */}
-        <div className="flex flex-col gap-3 flex-1">
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary">{movie.genre}</Badge>
+        <div className="flex flex-col gap-4 flex-1 pt-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-bold tracking-wider uppercase text-primary border border-primary/40 rounded-full px-3 py-1 bg-primary/10">
+              {movie.genre}
+            </span>
+            <span className="text-muted-foreground text-sm">·</span>
             <span className="text-muted-foreground text-sm">{movie.release_date.slice(0, 4)}</span>
-            <span className="text-muted-foreground text-sm">{movie.runtime} min</span>
+            {movie.runtime && (
+              <>
+                <span className="text-muted-foreground text-sm">·</span>
+                <span className="text-muted-foreground text-sm">{movie.runtime} min</span>
+              </>
+            )}
           </div>
 
-          <h1 className="text-4xl font-bold text-foreground">{movie.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">{movie.title}</h1>
 
-          <div className="flex items-center gap-1">
-            <span className="text-yellow-400 text-lg">★</span>
-            <span className="font-semibold text-foreground">{movie.vote_average}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-primary text-2xl leading-none">★</span>
+            <span className="font-bold text-foreground text-2xl">{movie.vote_average}</span>
             <span className="text-muted-foreground text-sm">/ 10</span>
           </div>
 
-          <Separator className="my-2" />
+          <div className="w-16 h-0.5 bg-primary/40 rounded-full" />
 
-          <p className="text-muted-foreground leading-relaxed">{movie.overview}</p>
+          <p className="text-muted-foreground leading-relaxed max-w-2xl">{movie.overview}</p>
 
-          <div className="flex gap-3 mt-4">
-            <Button size="lg" className="rounded-full px-8">
+          <div className="flex gap-3 mt-2 flex-wrap">
+            <Button size="lg" className="rounded-full px-8 font-semibold shadow-lg">
               🎟️ Buy Ticket
             </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full">
+            <Button asChild variant="outline" size="lg" className="rounded-full border-white/20 hover:bg-white/5">
               <Link to="/movies">← Back</Link>
             </Button>
           </div>
